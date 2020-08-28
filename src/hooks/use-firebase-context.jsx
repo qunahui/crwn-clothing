@@ -1,5 +1,5 @@
 import React from 'react';
-import firebase from '../firebase/firebase.utils';
+import { auth, createUserProfileDocument } from '../firebase/firebase.utils';
 
 const userContext = React.createContext({
   user: null,
@@ -14,16 +14,35 @@ export const useSession = () => {
 
 export const useAuth = () => {
   const [state, setState] = React.useState(() => {
-    const user = firebase.auth().currentUser;
-    return { initializing: !user, user };
+    const user = auth.currentUser;
+    return {
+      initializing: !user,
+      user,
+    };
   });
-  function onChange(user) {
-    setState({ initializing: false, user });
+
+  async function onChange(user) {
+    if (user) {
+      const userRef = await createUserProfileDocument(user);
+      userRef.onSnapshot((snapShot) =>
+        setState({
+          initializing: false,
+          user: {
+            id: snapShot.id,
+            ...snapShot.data(),
+          },
+        })
+      );
+    }
+    setState({
+      initializing: false,
+      user,
+    });
   }
 
   React.useEffect(() => {
     // listen for auth state changes
-    const unsubscribe = firebase.auth().onAuthStateChanged(onChange);
+    const unsubscribe = auth.onAuthStateChanged(onChange);
     // unsubscribe to the listener when unmounting
     return () => unsubscribe();
   }, []);

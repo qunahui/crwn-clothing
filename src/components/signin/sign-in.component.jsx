@@ -4,7 +4,7 @@ import './sign-in.styles.scss';
 import useCustomForm from '../../hooks/use-custom-form';
 import FormInput from '../form-input/form-input.component';
 import CustomButton from '../custom-button/custom-button.component';
-import { signInWithGoogle } from '../../firebase/firebase.utils';
+import { signInWithGoogle, auth } from '../../firebase/firebase.utils';
 
 const SignIn = () => {
   const initialValues = {
@@ -14,8 +14,13 @@ const SignIn = () => {
 
   const { values, handleChange, handleSubmit } = useCustomForm({
     initialValues,
-    onSubmit: (values) => {
-      alert(JSON.stringify(values));
+    onSubmit: async () => {
+      try {
+        const { email, password } = values;
+        await auth.signInWithEmailAndPassword(email, password);
+      } catch (e) {
+        console.log('Error: ', e);
+      }
     },
   });
 

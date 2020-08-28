@@ -15,7 +15,7 @@ const SignUp = () => {
     confirmPassword: '',
   };
 
-  const { values, handleChange, handleSubmit, clear } = useCustomForm({
+  const { values, handleChange, handleSubmit } = useCustomForm({
     initialValues,
     onSubmit: async () => {
       const { email, displayName, password, confirmPassword } = values;
@@ -24,8 +24,11 @@ const SignUp = () => {
         return;
       }
       try {
-        const { user } = auth.createUserWithEmailAndPassword(email, password);
-        await createUserProfileDocument(user, displayName);
+        const { user } = await auth.createUserWithEmailAndPassword(
+          email,
+          password
+        );
+        await createUserProfileDocument(user, { displayName });
       } catch (e) {
         console.log('Error: ', e.message);
       }

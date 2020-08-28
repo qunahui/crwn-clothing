@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import './App.css';
 import { Route, Switch } from 'react-router-dom';
 
@@ -7,11 +7,10 @@ import ShopPage from './pages/shoppage/shop.component';
 import Header from './components/header/header.component';
 import SignInAndSignUp from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
 // import useFirebaseAuthentication from './hooks/use-firebase-authentication';
-import { auth, createUserProfileDocument } from './firebase/firebase.utils';
 import userContext, { useAuth } from './hooks/use-firebase-context';
 
 function App() {
-  const { initializing, user } = useAuth();
+  const { user } = useAuth();
 
   console.log(user);
 
