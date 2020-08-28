@@ -9,6 +9,10 @@ const useCustomForm = ({ initialValues, onSubmit }) => {
     setValues({ ...values, [name]: value });
   };
 
+  const clear = () => {
+    setValues(initialValues);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit({ values });
@@ -17,6 +21,7 @@ const useCustomForm = ({ initialValues, onSubmit }) => {
 
   return {
     values,
+    clear,
     handleChange,
     handleSubmit,
   };

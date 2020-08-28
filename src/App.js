@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import { Route, Switch } from 'react-router-dom';
 
@@ -6,27 +6,24 @@ import HomePage from './pages/homepage/homepage.component';
 import ShopPage from './pages/shoppage/shop.component';
 import Header from './components/header/header.component';
 import SignInAndSignUp from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
-import { auth } from './firebase/firebase.utils';
-import useFirebaseAuthentication from './hooks/use-firebase-authentication';
+// import useFirebaseAuthentication from './hooks/use-firebase-authentication';
+import { auth, createUserProfileDocument } from './firebase/firebase.utils';
+import userContext, { useAuth } from './hooks/use-firebase-context';
 
 function App() {
-  const currentUser = useFirebaseAuthentication(auth);
+  const { initializing, user } = useAuth();
 
-  let unscribeFromAuth = null;
-
-  useEffect(() => {
-    console.log(currentUser);
-  });
+  console.log(user);
 
   return (
-    <div>
-      <Header currentUser={currentUser} />
+    <userContext.Provider value={{ user }}>
+      <Header currentUser={user} />
       <Switch>
         <Route path="/" component={HomePage} exact />
         <Route path="/shop" component={ShopPage} exact />
         <Route path="/signin" component={SignInAndSignUp} exact />
       </Switch>
-    </div>
+    </userContext.Provider>
   );
 }
 
